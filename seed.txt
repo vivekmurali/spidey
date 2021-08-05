@@ -1,0 +1,7 @@
+google.com
+amazon.com
+wikipedia.org
+geekforgeeks.org
+stackoverflow.com
+twitter.com
+yahoo.com
