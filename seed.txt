@@ -1,7 +1,7 @@
-google.com
-amazon.com
-wikipedia.org
-geekforgeeks.org
-stackoverflow.com
-twitter.com
-yahoo.com
+https://google.com
+https://amazon.com
+https://wikipedia.org
+https://geekforgeeks.org
+https://stackoverflow.com
+https://twitter.com
+https://yahoo.com

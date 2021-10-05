@@ -2,46 +2,36 @@
 
 ### A web crawler + search engine
 
+This tool can be used to search through pages that don't have a search option.
 
 
-1. Store a list of seed URLs in the database
-2. Go through the seed URLs and store non duplicate hyperlinks in the database
-3. Get all URLs from the database and continue crawling
-4. Commands that I can use to search all the data I have crawled
-5. Can reset stored data to run again with a different set of websites
+### Commands
+
+* Download
+* Search
+* Clear
 
 
+#### Download
 
-# Procedure
+The crawler collects and stores pages
 
-* Store the webpage in the database
-* Parse the HTML
-* Get a list of hyperlinks
-* Store the hyperlinks in the database if they don't already exist
+`spidey download -l URL`
 
+##### Options:
 
-
-
-
-# Database
-
-* URL
-* Time last parsed
-* Meta information
-* Content
+* -f input.yml {Use this file to set options and URLS}
+* -fl input.txt {The file will contain a list of links that the crawler will download from}
+* -s "URL" {Crawler will use the URL as the seed link}
 
 
 
+#### Search
 
+Search for a term in the pages stored by the crawler
 
-# TODO
+`spidey search search term`
 
-* [ ] Create a database
-* [ ] Put the Seed URLs in the database ( write a method call to do this)
-* [ ] Worker
-  * [ ] Retrieve all URLs from the database
-  * [ ] Spawn a new worker that parses the webpage
-  * [ ] Store the hyperlinks in the database (unique links)
-  * [ ] Store the content
-* [ ] Time the process
+#### Clear
 
+Clear all the crawled pages
