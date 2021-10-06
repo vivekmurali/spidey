@@ -7,18 +7,28 @@ This tool can be used to search through pages that don't have a search option.
 
 ### Commands
 
-* Download
-* Search
-* Clear
+* version
+* download
+* search
+* clear
 
+#### spidey
 
-#### Download
+Initialize the application
+
+`spidey`
+
+#### version
+
+Prints the version of the project
+
+#### download
 
 The crawler collects and stores pages
 
 `spidey download -l URL`
 
-##### Options:
+##### options:
 
 * -f input.yml {Use this file to set options and URLS}
 * -fl input.txt {The file will contain a list of links that the crawler will download from}
@@ -26,12 +36,12 @@ The crawler collects and stores pages
 
 
 
-#### Search
+#### search
 
 Search for a term in the pages stored by the crawler
 
 `spidey search search term`
 
-#### Clear
+#### clear
 
 Clear all the crawled pages

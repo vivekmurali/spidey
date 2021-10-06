@@ -1,7 +1,0 @@
-https://google.com
-https://amazon.com
-https://wikipedia.org
-https://geekforgeeks.org
-https://stackoverflow.com
-https://twitter.com
-https://yahoo.com
