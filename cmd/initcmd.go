@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"github.com/spf13/cobra"
+	"github.com/vivekmurali/spidey/pkg"
 )
 
 func init() {
@@ -11,8 +12,5 @@ func init() {
 var initCmd = &cobra.Command{
 	Use:   "init",
 	Short: "Create the database file",
-	Run: func(cmd *cobra.Command, args []string) {
-		// link to the init file
-
-	},
+	Run:   pkg.Init,
 }
