@@ -14,3 +14,13 @@ A small search engine
 - [x]  Init should create DB file
 - [ ]  Change viper location to new folder
 
+
+# Schema
+
+### links
+
+ID, URL, content, links, last_parsed
+
+### index
+
+ID, word, links
