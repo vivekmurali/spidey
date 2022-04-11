@@ -1,4 +1,4 @@
-package pkg
+package commands
 
 import (
 	"fmt"
@@ -7,5 +7,6 @@ import (
 )
 
 func Version(cmd *cobra.Command, args []string) {
-	fmt.Println("Version command")
+	fmt.Println("Version: 0.0.1")
+	// fmt.Println(viper.Get("name"))
 }
