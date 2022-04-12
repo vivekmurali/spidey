@@ -19,8 +19,10 @@ A small search engine
 
 ### links
 
-ID, URL, content, links, last_parsed
+ID, URL, title, content, links, last_parsed
 
 ### index
 
-ID, word, links
+word, links
+
+https://pkg.go.dev/github.com/cockroachdb/pebble
