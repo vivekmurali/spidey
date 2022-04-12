@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 
 	"github.com/spf13/cobra"
+	"github.com/vivekmurali/spidey/pkg/db"
 )
 
 func Init(cmd *cobra.Command, args []string) {
@@ -39,9 +40,13 @@ func Init(cmd *cobra.Command, args []string) {
 	}
 	defer f.Close()
 
-	_, err = f.Write([]byte("https://vivekmurali.in\nhttps://github.com/vivekmurali"))
+	_, err = f.Write([]byte(`https://vivekmurali.in
+https://github.com/vivekmurali
+https://techcrunch.com/
+https://go.dev/`))
 	if err != nil {
 		// fmt.Println("Could not add default links to seed.txt")
 		panic(err)
 	}
+	db.InitDB()
 }

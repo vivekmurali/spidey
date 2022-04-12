@@ -11,18 +11,22 @@ A small search engine
 
 # TODO
 
-- [x]  Init should create DB file
+- [x] Set up sqlite
+- [ ] Get links from page
+- [ ] remove stop words
+- [ ] Index
+- [ ] Search
 - [ ]  Change viper location to new folder
 
 
 # Schema
 
-### links
+### documents
 
 ID, URL, title, content, links, last_parsed
 
 ### index
 
-word, links
+ID, word, links
 
 https://pkg.go.dev/github.com/cockroachdb/pebble
