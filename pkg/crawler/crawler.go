@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+	"log"
 	"net/http"
 	"strings"
 	"sync"
@@ -11,43 +12,64 @@ import (
 	"golang.org/x/net/html"
 )
 
+// A recursive function that runs till count counts down
 func GetPage(url string, wg *sync.WaitGroup, count int) {
-	// fmt.Println(url, count)
-	parsePage(url)
+	if count < 1 {
+		wg.Done()
+		return
+	}
+	links, err := parsePage(url)
+	if err != nil {
+		wg.Done()
+		log.Println(err)
+		return
+	}
 
-	// Create new waitgroup before sending all links here
-	// Recursive function
+	var wg1 sync.WaitGroup
+	for _, v := range links {
+		// Convert relative URLs to absolute
+		wg1.Add(1)
+		GetPage(v, &wg1, count-1)
+	}
+	wg1.Wait()
 
 	wg.Done()
 }
 
-func parsePage(url string) {
+func parsePage(url string) ([]string, error) {
 	res, err := http.Get(url)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 	defer res.Body.Close()
 
 	if res.StatusCode >= 400 {
-		return
+		return nil, fmt.Errorf("Bad status")
 	}
 
 	doc, err := html.Parse(res.Body)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
 	// fmt.Println(getTitle(doc))
 
 	b, err := body(doc)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
 	_ = b
-	// fmt.Println(getBodyString(b))
+
+	// store in db
+	title := getTitle(doc)
+	body := getBodyString(b)
+	links := getLinks(b)
+	_, _ = title, body
+	fmt.Println(title)
 	fmt.Println("")
 
+	return links, nil
 }
 
 func body(doc *html.Node) (*html.Node, error) {
@@ -74,7 +96,9 @@ func getTitle(doc *html.Node) string {
 	var crawler func(*html.Node)
 	crawler = func(node *html.Node) {
 		if node.Type == html.ElementNode && node.Data == "title" {
-			title = node.FirstChild.Data
+			if node.FirstChild.Data != "" {
+				title = node.FirstChild.Data
+			}
 			return
 		}
 		for child := node.FirstChild; child != nil; child = child.NextSibling {
@@ -107,4 +131,27 @@ func getBodyString(b *html.Node) string {
 
 func standardizeSpaces(s string) string {
 	return strings.Join(strings.Fields(s), " ")
+}
+
+// Check links
+func getLinks(b *html.Node) []string {
+	links := make([]string, 0, 0)
+
+	var crawler func(*html.Node)
+	crawler = func(node *html.Node) {
+		if node.Type == html.ElementNode && node.Data == "a" {
+			for _, a := range node.Attr {
+				if a.Key == "href" {
+					links = append(links, a.Val)
+					break
+				}
+			}
+		}
+		for child := node.FirstChild; child != nil; child = child.NextSibling {
+			crawler(child)
+		}
+	}
+	crawler(b)
+
+	return links
 }

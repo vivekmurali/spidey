@@ -26,8 +26,12 @@ func Crawl(cmd *cobra.Command, args []string) {
 		panic(err)
 	}
 	if count < 0 {
-		count = 5
+		count = 2
 	}
+
+	//TODO: move the seed file stuff to another function
+	//For loop with count to go to same page
+	// Add to DB
 
 	// Work with crawlers from here based on flags
 	home, err := os.UserHomeDir()

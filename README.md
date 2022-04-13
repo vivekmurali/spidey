@@ -12,7 +12,9 @@ A small search engine
 # TODO
 
 - [x] Set up sqlite
-- [ ] Get links from page
+- [x] Get links from page
+- [ ] Change from recursion to checking database
+- [ ] Make relative links absolute
 - [ ] remove stop words
 - [ ] Index
 - [ ] Search
