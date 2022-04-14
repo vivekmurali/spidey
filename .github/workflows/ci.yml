@@ -22,7 +22,7 @@ jobs:
       run: go build -v ./...
         
     - name: Before test
-      run: ./spidey init
+      run: go run . init
 
     - name: Test
       run: go test -v ./...
