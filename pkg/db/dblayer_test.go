@@ -10,7 +10,6 @@ func TestData_Insert(t *testing.T) {
 		d       Data
 		wantErr bool
 	}{
-		// TODO: Add test cases.
 		{
 			name:    "1",
 			d:       Data{URL: "https://vivekmurali.in", Title: "Vivek", Content: "this is the content", Links: []string{"https://github.com/vivekmurali", "https://twitter.com/vivekmurali2k"}, Last_parsed: 1257894000},

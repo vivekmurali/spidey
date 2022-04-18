@@ -20,7 +20,7 @@ A small search engine
 - [x] Change from recursion to checking database
 - [x] Change github action workflow name
 - [x] Make relative links absolute
-- [ ] remove stop words
+- [x] remove stop words
 - [ ] Index
 - [ ] Search
 - [ ] Change viper location to new folder

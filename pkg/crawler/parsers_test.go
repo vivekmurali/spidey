@@ -20,7 +20,6 @@ func Test_getBodyString(t *testing.T) {
 		args args
 		want string
 	}{
-		// TODO: Add test cases.
 		{
 			name: "1",
 			args: args{b: b},
@@ -47,7 +46,6 @@ func Test_absoluteURL(t *testing.T) {
 		want    string
 		wantErr bool
 	}{
-		// TODO: Add test cases.
 		{
 			name:    "1",
 			args:    args{u: "https://github.com", v: "/vivekmurali"},
