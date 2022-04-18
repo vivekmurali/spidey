@@ -47,7 +47,7 @@ func (d Data) Insert() error {
 func GetLinks() ([]string, error) {
 	var links []string
 
-	rows, err := db.Query("select url from documents where title is null")
+	rows, err := db.Query("select url from documents where title is null limit 30")
 	if err != nil {
 		return nil, err
 	}

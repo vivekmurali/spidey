@@ -24,6 +24,7 @@ A small search engine
 - [ ] Index
 - [ ] Search
 - [ ] Change viper location to new folder
+- [x] Database is locked
 
 
 # Schema

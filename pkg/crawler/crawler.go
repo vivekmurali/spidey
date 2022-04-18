@@ -33,7 +33,7 @@ func parsePage(u string) error {
 	defer res.Body.Close()
 
 	if res.StatusCode >= 400 {
-		return fmt.Errorf("Bad status")
+		return fmt.Errorf("Bad status: %s", u)
 	}
 
 	doc, err := html.Parse(res.Body)
@@ -55,22 +55,6 @@ func parsePage(u string) error {
 	links = getLinks(b)
 
 	for i, v := range links {
-		// _, err = url.ParseRequestURI(v)
-		// if err != nil {
-		// 	fmt.Println(v)
-		// 	if errors.As(err, &e) && e.Op == "parse" {
-		// 		//TODO make into absolute URL
-		// 		// fmt.Println("reached parse error")
-		// 		// fmt.Println(v)
-		// 		links[i], err = absoluteURL(u, v)
-		// 		if err != nil {
-		// 			return err
-		// 		}
-		// 		continue
-		// 	}
-		// 	return err
-		// }
-
 		if !isUrl(v) {
 			links[i], err = absoluteURL(u, v)
 			if err != nil {
@@ -78,8 +62,6 @@ func parsePage(u string) error {
 			}
 		}
 	}
-
-	// fmt.Println(links)
 
 	data := db.Data{URL: u, Title: title, Content: body, Links: links, Last_parsed: time.Now().Unix()}
 

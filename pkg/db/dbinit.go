@@ -20,7 +20,7 @@ func init() {
 	}
 
 	path := filepath.Join(home, "spidey", "spidey.db")
-
+	path += "?cache=shared&mode=rwc&_busy_timeout=9999999"
 	db, err = sql.Open("sqlite3", path)
 	if err != nil {
 		log.Fatal(err)
