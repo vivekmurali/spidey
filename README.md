@@ -16,13 +16,13 @@ A small search engine
 - [x] Set up sqlite
 - [x] Get links from page
 - [x] Set up insert into database and get from database
-- [ ] Change crawl.go to get links from db and crawl them instead of seed.txt
-- [ ] Change from recursion to checking database
+- [x] Change crawl.go to get links from db and crawl them instead of seed.txt
+- [x] Change from recursion to checking database
 - [ ] Make relative links absolute
 - [ ] remove stop words
 - [ ] Index
 - [ ] Search
-- [ ]  Change viper location to new folder
+- [ ] Change viper location to new folder
 
 
 # Schema

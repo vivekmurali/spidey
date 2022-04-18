@@ -8,68 +8,58 @@ import (
 	"net/http"
 	"strings"
 	"sync"
+	"time"
 
+	"github.com/vivekmurali/spidey/pkg/db"
 	"golang.org/x/net/html"
 )
 
 // A recursive function that runs till count counts down
-func GetPage(url string, wg *sync.WaitGroup, count int) {
-	if count < 1 {
-		wg.Done()
-		return
-	}
-	links, err := parsePage(url)
+func GetPage(url string, wg *sync.WaitGroup) {
+	defer wg.Done()
+
+	err := parsePage(url)
 	if err != nil {
-		wg.Done()
 		log.Println(err)
-		return
 	}
-
-	var wg1 sync.WaitGroup
-	for _, v := range links {
-		// Convert relative URLs to absolute
-		wg1.Add(1)
-		GetPage(v, &wg1, count-1)
-	}
-	wg1.Wait()
-
-	wg.Done()
 }
 
-func parsePage(url string) ([]string, error) {
+func parsePage(url string) error {
 	res, err := http.Get(url)
 	if err != nil {
-		return nil, err
+		return err
 	}
 	defer res.Body.Close()
 
 	if res.StatusCode >= 400 {
-		return nil, fmt.Errorf("Bad status")
+		return fmt.Errorf("Bad status")
 	}
 
 	doc, err := html.Parse(res.Body)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	// fmt.Println(getTitle(doc))
 
 	b, err := body(doc)
 	if err != nil {
-		return nil, err
+		return err
 	}
-
-	_ = b
 
 	// store in db
 	title := getTitle(doc)
 	body := getBodyString(b)
 	links := getLinks(b)
-	_, _ = title, body
-	fmt.Println(title)
-	fmt.Println("")
 
-	return links, nil
+	data := db.Data{URL: url, Title: title, Content: body, Links: links, Last_parsed: time.Now().Unix()}
+
+	err = data.Insert()
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func body(doc *html.Node) (*html.Node, error) {

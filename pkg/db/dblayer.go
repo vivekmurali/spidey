@@ -12,7 +12,7 @@ type Data struct {
 	Title       string
 	Content     string
 	Links       []string
-	Last_parsed int
+	Last_parsed int64
 }
 
 func (d Data) Insert() error {
@@ -22,7 +22,13 @@ func (d Data) Insert() error {
 	links := strings.Join(d.Links, ";")
 	_, err := db.Exec("insert into documents (url, title, content, links, last_parsed) values($1, $2, $3, $4, $5)", d.URL, d.Title, d.Content, links, d.Last_parsed)
 	if err != nil {
-		if errors.As(err, &e) && e.ExtendedCode != sqlite3.ErrConstraintUnique {
+		if errors.As(err, &e) && e.ExtendedCode == sqlite3.ErrConstraintUnique {
+			_, err := db.Exec("update documents set title = $1, content = $2, links = $3, last_parsed = $4 where url = $5", d.Title, d.Content, links, d.Last_parsed, d.URL)
+			if err != nil {
+				return err
+			}
+
+		} else if errors.As(err, &e) && e.ExtendedCode != sqlite3.ErrConstraintUnique {
 			return err
 		}
 	}
