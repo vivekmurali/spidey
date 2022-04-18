@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"net/url"
 	"strings"
 	"sync"
 	"time"
@@ -24,8 +25,8 @@ func GetPage(url string, wg *sync.WaitGroup) {
 	}
 }
 
-func parsePage(url string) error {
-	res, err := http.Get(url)
+func parsePage(u string) error {
+	res, err := http.Get(u)
 	if err != nil {
 		return err
 	}
@@ -47,12 +48,40 @@ func parsePage(url string) error {
 		return err
 	}
 
-	// store in db
+	var links []string
+
 	title := getTitle(doc)
 	body := getBodyString(b)
-	links := getLinks(b)
+	links = getLinks(b)
 
-	data := db.Data{URL: url, Title: title, Content: body, Links: links, Last_parsed: time.Now().Unix()}
+	for i, v := range links {
+		// _, err = url.ParseRequestURI(v)
+		// if err != nil {
+		// 	fmt.Println(v)
+		// 	if errors.As(err, &e) && e.Op == "parse" {
+		// 		//TODO make into absolute URL
+		// 		// fmt.Println("reached parse error")
+		// 		// fmt.Println(v)
+		// 		links[i], err = absoluteURL(u, v)
+		// 		if err != nil {
+		// 			return err
+		// 		}
+		// 		continue
+		// 	}
+		// 	return err
+		// }
+
+		if !isUrl(v) {
+			links[i], err = absoluteURL(u, v)
+			if err != nil {
+				return err
+			}
+		}
+	}
+
+	// fmt.Println(links)
+
+	data := db.Data{URL: u, Title: title, Content: body, Links: links, Last_parsed: time.Now().Unix()}
 
 	err = data.Insert()
 	if err != nil {
@@ -144,4 +173,22 @@ func getLinks(b *html.Node) []string {
 	crawler(b)
 
 	return links
+}
+
+func absoluteURL(u, v string) (string, error) {
+	base, err := url.Parse(u)
+	if err != nil {
+		return "", err
+	}
+	rel, err := url.Parse(v)
+	if err != nil {
+		return "", err
+	}
+
+	return base.ResolveReference(rel).String(), nil
+}
+
+func isUrl(str string) bool {
+	u, err := url.Parse(str)
+	return err == nil && u.Scheme != "" && u.Host != ""
 }

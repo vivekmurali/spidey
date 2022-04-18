@@ -18,7 +18,8 @@ A small search engine
 - [x] Set up insert into database and get from database
 - [x] Change crawl.go to get links from db and crawl them instead of seed.txt
 - [x] Change from recursion to checking database
-- [ ] Make relative links absolute
+- [x] Change github action workflow name
+- [x] Make relative links absolute
 - [ ] remove stop words
 - [ ] Index
 - [ ] Search

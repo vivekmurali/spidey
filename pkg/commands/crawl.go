@@ -1,8 +1,8 @@
 package commands
 
 import (
-	"fmt"
 	"log"
+	"net/url"
 	"os"
 	"path/filepath"
 	"strings"
@@ -87,13 +87,20 @@ func Crawl(cmd *cobra.Command, args []string) {
 
 		links = strings.Split(string(data), "\n")
 
+		for _, v := range links {
+			_, err = url.ParseRequestURI(v)
+			if err != nil {
+				log.Fatalf("%s is not a valid URL, please update the seed.txt file and try again", v)
+			}
+		}
+
 	} else {
 		links, err = db.GetLinks()
 		if err != nil {
 			log.Fatal(err)
 		}
 	}
-	fmt.Println(links)
+	// fmt.Println(links)
 
 	var wg sync.WaitGroup
 	for _, v := range links {
