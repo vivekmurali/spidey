@@ -48,5 +48,11 @@ https://go.dev/`))
 		// fmt.Println("Could not add default links to seed.txt")
 		panic(err)
 	}
+
+	path = filepath.Join(home, "spidey", "kv.db")
+	_, err = os.Create(path)
+	if err != nil {
+		panic(err)
+	}
 	db.InitDB()
 }
