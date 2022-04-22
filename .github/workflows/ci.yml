@@ -17,9 +17,11 @@ jobs:
       uses: actions/setup-go@v2
       with:
         go-version: 1.18
- 
+
     - name: Build
       run: go build -v ./...
 
+    - name: Pre Test
+      run: mkdir -p ~/runner/spidey && touch ~/runner/spidey/kv.db
     - name: Test
       run: go test -v ./...
