@@ -21,10 +21,11 @@ A small search engine
 - [x] Change github action workflow name
 - [x] Make relative links absolute
 - [x] remove stop words
-- [ ] Index
-- [ ] Search
+- [x] Index
+- [x] Search
 - [ ] Change viper location to new folder
 - [x] Database is locked
+- [ ] Print in descending order
 
 
 # Schema

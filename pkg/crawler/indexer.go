@@ -2,13 +2,15 @@ package crawler
 
 import (
 	"strings"
+	"sync"
 
 	"github.com/bbalet/stopwords"
 	"github.com/vivekmurali/spidey/pkg/db"
 	"go.etcd.io/bbolt"
 )
 
-func index(u, s string) {
+func index(u, s string, wg *sync.WaitGroup) {
+	defer wg.Done()
 	clean := stopwords.CleanString(s, "en", false)
 	cleanSlice := strings.Split(clean, " ")
 

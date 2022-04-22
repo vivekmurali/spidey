@@ -50,7 +50,10 @@ func parsePage(u string) error {
 	body := getBodyString(b)
 	links = getLinks(b)
 
-	go index(u, title+" "+body)
+	var wg sync.WaitGroup
+	wg.Add(1)
+
+	go index(u, title+" "+body, &wg)
 
 	for i, v := range links {
 		if !isUrl(v) {
@@ -63,6 +66,7 @@ func parsePage(u string) error {
 
 	data := db.Data{URL: u, Title: title, Content: body, Links: links, Last_parsed: time.Now().Unix()}
 
+	wg.Wait()
 	err = data.Insert()
 	if err != nil {
 		return err
