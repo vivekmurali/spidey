@@ -50,7 +50,7 @@ func parsePage(u string) error {
 	body := getBodyString(b)
 	links = getLinks(b)
 
-	go index(title + " " + body)
+	go index(u, title+" "+body)
 
 	for i, v := range links {
 		if !isUrl(v) {

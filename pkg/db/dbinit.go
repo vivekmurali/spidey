@@ -2,26 +2,32 @@ package db
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 	"os"
 	"path/filepath"
 
 	_ "github.com/mattn/go-sqlite3"
+	bolt "go.etcd.io/bbolt"
 )
 
 var db *sql.DB
+var KV *bolt.DB
 
 func init() {
 	home, err := os.UserHomeDir()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "%v", err)
-		os.Exit(1)
+		log.Fatal(err)
 	}
 
 	path := filepath.Join(home, "spidey", "spidey.db")
 	path += "?cache=shared&mode=rwc&_busy_timeout=9999999"
 	db, err = sql.Open("sqlite3", path)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	path = filepath.Join(home, "spidey", "kv.db")
+	KV, err = bolt.Open(path, 0600, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -40,4 +46,11 @@ func InitDB() {
 		log.Fatal(err)
 	}
 
+	err = KV.Update(func(tx *bolt.Tx) error {
+		_, err := tx.CreateBucket([]byte("bucket"))
+		if err != nil {
+			return err
+		}
+		return nil
+	})
 }
