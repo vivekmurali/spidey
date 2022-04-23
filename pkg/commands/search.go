@@ -18,7 +18,7 @@ func Search(cmd *cobra.Command, args []string) {
 	}
 
 	sort.SliceStable(keys, func(i, j int) bool {
-		return m[keys[i]] < m[keys[j]]
+		return m[keys[i]] > m[keys[j]]
 	})
 
 	for _, v := range keys {
