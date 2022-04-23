@@ -22,6 +22,6 @@ jobs:
       run: go build -v ./...
 
     - name: Pre Test
-      run: mkdir -p ~/runner/spidey && touch ~/runner/spidey/kv.db
+      run: mkdir -p /home/runner/spidey && touch /home/runner/spidey/kv.db
     - name: Test
       run: go test -v ./...
