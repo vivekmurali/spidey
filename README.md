@@ -25,8 +25,8 @@ A small search engine
 - [x] Search
 - [ ] Change viper location to new folder
 - [x] Database is locked
-- [ ] Print in descending order
-- [ ] Fix tests using database
+- [x] Print in descending order
+- [x] Fix tests using database
 - [ ] Trace runtime
 
 
