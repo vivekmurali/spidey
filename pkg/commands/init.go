@@ -54,5 +54,6 @@ https://go.dev/`))
 	if err != nil {
 		panic(err)
 	}
+	db.Initalize()
 	db.InitDB()
 }

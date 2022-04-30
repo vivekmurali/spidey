@@ -15,6 +15,8 @@ import (
 
 func Crawl(cmd *cobra.Command, args []string) {
 
+	db.Initalize()
+
 	count, err := cmd.Flags().GetInt("number_limit")
 	if err != nil {
 		panic(err)
@@ -64,6 +66,5 @@ func Crawl(cmd *cobra.Command, args []string) {
 			go crawler.GetPage(v, &wg)
 		}
 		wg.Wait()
-
 	}
 }
