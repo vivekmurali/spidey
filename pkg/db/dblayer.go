@@ -20,7 +20,7 @@ func Insert(d []Data) {
 		fmt.Println("DIdn't receive enough data")
 		return
 	}
-	stmt := "insert into documents (url, title, content, links, last_parsed) values %s"
+	stmt := "insert or replace into documents (url, title, content, links, last_parsed) values %s"
 
 	valueStrings := []string{}
 	valueArgs := []interface{}{}
@@ -51,7 +51,7 @@ func Insert(d []Data) {
 		log.Fatalf("Couldn't insert into SQLite: %v", err)
 	}
 
-	stmt = "insert into documents (url) values %s"
+	stmt = "insert or ignore into documents (url) values %s"
 	stmt = fmt.Sprintf(stmt, strings.Join(linkStrings, ","))
 
 	_, err = db.Exec(stmt, linkArgs...)
@@ -63,7 +63,7 @@ func Insert(d []Data) {
 func GetLinks() ([]string, error) {
 	var links []string
 
-	rows, err := db.Query("select url from documents where title is null limit 30")
+	rows, err := db.Query("select url from documents where title is null limit 50")
 	if err != nil {
 		return nil, err
 	}

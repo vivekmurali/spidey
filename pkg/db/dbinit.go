@@ -33,28 +33,9 @@ func Initalize() {
 	}
 }
 
-// func init() {
-// 	home, err := os.UserHomeDir()
-// 	if err != nil {
-// 		log.Fatal(err)
-// 	}
-
-// 	path := filepath.Join(home, "spidey", "spidey.db")
-// 	path += "?cache=shared&mode=rwc&_busy_timeout=9999999"
-// 	db, err = sql.Open("sqlite3", path)
-// 	if err != nil {
-// 		log.Fatal(err)
-// 	}
-
-// 	path = filepath.Join(home, "spidey", "kv.db")
-// 	KV, err = bolt.Open(path, 0600, nil)
-// 	if err != nil {
-// 		log.Fatal(err)
-// 	}
-// }
-
+//TODO: TEST UNIQUE CREATE TABLE
 func InitDB() {
-	sqlStmt := `create table documents (id integer primary key, url string, title string, content string, links string, last_parsed integer);`
+	sqlStmt := `create table documents (id integer primary key, url string unique, title string, content string, links string, last_parsed integer);`
 	_, err := db.Exec(sqlStmt)
 	if err != nil {
 		log.Fatal(err)

@@ -80,8 +80,20 @@ func Crawl(cmd *cobra.Command, args []string) {
 		}
 		wg.Wait()
 
-		//TODO: REMOVE DUPLICATES
-
+		// data = unique(data)
 		db.Insert(data)
 	}
+}
+
+func unique(d []db.Data) []db.Data {
+	inResult := make(map[string]bool)
+	var result []db.Data
+
+	for _, v := range d {
+		if _, ok := inResult[v.URL]; !ok {
+			inResult[v.URL] = true
+			result = append(result, v)
+		}
+	}
+	return result
 }
