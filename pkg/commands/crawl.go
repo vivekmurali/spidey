@@ -61,10 +61,27 @@ func Crawl(cmd *cobra.Command, args []string) {
 		}
 
 		var wg sync.WaitGroup
+		// data := make([]db.Data, 0)
+		data := []db.Data{}
+		ch := make(chan *db.Data, 5)
+
+		go func() {
+			for {
+				select {
+				case d := <-ch:
+					data = append(data, *d)
+				}
+			}
+		}()
+
 		for _, v := range links {
 			wg.Add(1)
-			go crawler.GetPage(v, &wg)
+			go crawler.GetPage(ch, v, &wg)
 		}
 		wg.Wait()
+
+		//TODO: REMOVE DUPLICATES
+
+		db.Insert(data)
 	}
 }

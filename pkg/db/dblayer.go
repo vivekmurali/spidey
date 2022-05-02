@@ -1,10 +1,9 @@
 package db
 
 import (
-	"errors"
+	"fmt"
+	"log"
 	"strings"
-
-	"github.com/mattn/go-sqlite3"
 )
 
 type Data struct {
@@ -15,33 +14,50 @@ type Data struct {
 	Last_parsed int64
 }
 
-func (d Data) Insert() error {
+func Insert(d []Data) {
 
-	var e sqlite3.Error
+	if len(d) < 1 {
+		fmt.Println("DIdn't receive enough data")
+		return
+	}
+	stmt := "insert into documents (url, title, content, links, last_parsed) values %s"
 
-	links := strings.Join(d.Links, ";")
-	_, err := db.Exec("insert into documents (url, title, content, links, last_parsed) values($1, $2, $3, $4, $5)", d.URL, d.Title, d.Content, links, d.Last_parsed)
+	valueStrings := []string{}
+	valueArgs := []interface{}{}
+	linkStrings := []string{}
+	linkArgs := []interface{}{}
+
+	for _, v := range d {
+		valueStrings = append(valueStrings, "(?, ?, ?, ?, ?)")
+		links := strings.Join(v.Links, ";")
+
+		valueArgs = append(valueArgs, v.URL)
+		valueArgs = append(valueArgs, v.Title)
+		valueArgs = append(valueArgs, v.Content)
+		valueArgs = append(valueArgs, links)
+		valueArgs = append(valueArgs, v.Last_parsed)
+
+		for _, v1 := range v.Links {
+			linkStrings = append(linkStrings, "(?)")
+			linkArgs = append(linkArgs, v1)
+		}
+	}
+
+	stmt = fmt.Sprintf(stmt, strings.Join(valueStrings, ","))
+	// fmt.Println(stmt)
+
+	_, err := db.Exec(stmt, valueArgs...)
 	if err != nil {
-		if errors.As(err, &e) && e.ExtendedCode == sqlite3.ErrConstraintUnique {
-			_, err := db.Exec("update documents set title = $1, content = $2, links = $3, last_parsed = $4 where url = $5", d.Title, d.Content, links, d.Last_parsed, d.URL)
-			if err != nil {
-				return err
-			}
+		log.Fatalf("Couldn't insert into SQLite: %v", err)
+	}
 
-		} else if errors.As(err, &e) && e.ExtendedCode != sqlite3.ErrConstraintUnique {
-			return err
-		}
+	stmt = "insert into documents (url) values %s"
+	stmt = fmt.Sprintf(stmt, strings.Join(linkStrings, ","))
+
+	_, err = db.Exec(stmt, linkArgs...)
+	if err != nil {
+		log.Fatalf("Couldn't insert into SQLite: %v", err)
 	}
-	for _, v := range d.Links {
-		_, err = db.Exec("insert into documents (url) values($1)", v)
-		if err != nil {
-			if errors.As(err, &e) {
-				continue
-			}
-			return err
-		}
-	}
-	return nil
 }
 
 func GetLinks() ([]string, error) {

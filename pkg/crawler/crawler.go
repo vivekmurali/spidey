@@ -12,36 +12,39 @@ import (
 )
 
 // A recursive function that runs till count counts down
-func GetPage(url string, wg *sync.WaitGroup) {
+func GetPage(ch chan *db.Data, url string, wg *sync.WaitGroup) {
 	defer wg.Done()
 
-	err := parsePage(url)
+	data, err := parsePage(url)
 	if err != nil {
 		log.Println(err)
+		return
 	}
+
+	ch <- data
 }
 
-func parsePage(u string) error {
+func parsePage(u string) (*db.Data, error) {
 	res, err := http.Get(u)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	defer res.Body.Close()
 
 	if res.StatusCode >= 400 {
-		return fmt.Errorf("Bad status: %s", u)
+		return nil, fmt.Errorf("Bad status: %s", u)
 	}
 
 	doc, err := html.Parse(res.Body)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	// fmt.Println(getTitle(doc))
 
 	b, err := body(doc)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	var links []string
@@ -59,7 +62,7 @@ func parsePage(u string) error {
 		if !isUrl(v) {
 			links[i], err = absoluteURL(u, v)
 			if err != nil {
-				return err
+				return nil, err
 			}
 		}
 	}
@@ -67,10 +70,10 @@ func parsePage(u string) error {
 	data := db.Data{URL: u, Title: title, Content: body, Links: links, Last_parsed: time.Now().Unix()}
 
 	wg.Wait()
-	err = data.Insert()
-	if err != nil {
-		return err
-	}
+	// err = data.Insert()
+	// if err != nil {
+	// 	return err
+	// }
 
-	return nil
+	return &data, nil
 }
