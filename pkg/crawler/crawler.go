@@ -2,7 +2,6 @@ package crawler
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 	"sync"
 	"time"
@@ -14,10 +13,8 @@ import (
 // A recursive function that runs till count counts down
 func GetPage(ch chan *db.Data, url string, wg *sync.WaitGroup) {
 	defer wg.Done()
-
 	data, err := parsePage(url)
 	if err != nil {
-		log.Println(err)
 		return
 	}
 
@@ -70,10 +67,6 @@ func parsePage(u string) (*db.Data, error) {
 	data := db.Data{URL: u, Title: title, Content: body, Links: links, Last_parsed: time.Now().Unix()}
 
 	wg.Wait()
-	// err = data.Insert()
-	// if err != nil {
-	// 	return err
-	// }
 
 	return &data, nil
 }

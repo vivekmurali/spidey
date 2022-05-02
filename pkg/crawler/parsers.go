@@ -33,10 +33,12 @@ func getTitle(doc *html.Node) string {
 	var crawler func(*html.Node)
 	crawler = func(node *html.Node) {
 		if node.Type == html.ElementNode && node.Data == "title" {
-			if node.FirstChild.Data != "" {
-				title = node.FirstChild.Data
+			if node.FirstChild != nil {
+				if node.FirstChild.Data != "" {
+					title = node.FirstChild.Data
+				}
+				return
 			}
-			return
 		}
 		for child := node.FirstChild; child != nil; child = child.NextSibling {
 			crawler(child)
